@@ -66,7 +66,7 @@ do
   chsh -s $(which zsh)
   fi
   if [ $ANSWER == "5" ]; then
-sudo pacman -Sy i3 --noconfirm --needed
+  sudo pacman -Sy i3 --noconfirm --needed
   else
     echo "Quitting..."
     RUN=1 # set run flag to 0 so program will end
