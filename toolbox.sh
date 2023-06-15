@@ -7,9 +7,9 @@ do
   echo "SteavenToolbox-For-Arch | We care about your pc!" "Arch Linux!"
   echo ================================================================
   echo "1. Update Arch Linux"
-  echo "2. Install Needed Arch Linux Apps Apps"
+  echo "2. Install Needed Arch Linux Apps"
   echo "3. Replace Snap Store with Gnome Software"
-  echo "4. Install ZSH with Power10k and zsh autocompilte"
+  echo "4. Install ZSH with Power10k and zsh autocomplete"
   echo "5. Install i3"
   echo "0. Exit"
   read -p "Type the number." ANSWER
@@ -31,7 +31,7 @@ do
   if [ $ANSWER == "2" ]; then
   clear
   echo "Installing VLC and MPV"
-  sudo pacman -S --noconfirm --needed vlv mp
+  sudo pacman -S --noconfirm --needed vlc mpv
   fi
 
   if [ $ANSWER == "3" ]; then
@@ -41,16 +41,11 @@ do
   sudo pacman -S --noconfirm --needed flatpak 
   sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
   echo "Installing Gnome Software"
-  sudo pacman -S --noconfirm --needed gnome-software 
+  sudo pacman -S --noconfirm --needed gnome-software packagekit gnome-software-packagekit-plugin
   fi
   if [ $ANSWER == "4" ]; then
   echo "Installing Fonts"
-  wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip
-  wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Meslo.zip
-  sudo unzip FiraCode.zip -d "/usr/share/fonts"
-  sudo unzip Meslo.zip -d "/usr/share/fonts"
-  sudo fc-cache -vf
-  rm ./FiraCode.zip ./Meslo.zip
+  sudo pacman -S ttf-meslo-nerd ttf-firacode-nerd
   echo "Installing ZSH"
   sudo pacman -S --noconfirm --needed zsh zsh-syntax-highlighting autojump zsh-autosuggestions git
   echo "Installing Powerlevel10k"
