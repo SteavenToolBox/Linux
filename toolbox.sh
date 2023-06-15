@@ -31,7 +31,7 @@ do
   if [ $ANSWER == "2" ]; then
   clear
   echo "Installing VLC and MPV"
-  sudo pacman -S --noconfirm --needed vlv mp
+  sudo pacman -S --noconfirm --needed vlc mpv
   fi
 
   if [ $ANSWER == "3" ]; then
