@@ -1,0 +1,13 @@
+kscreen
+plymouth-kcm
+flatpak-kcm
+plasma-desktop
+sddm
+dolphin
+konsole
+ark
+unrar
+unzip
+discover
+plasma-nm
+plasma-pa
