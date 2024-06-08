@@ -239,6 +239,7 @@ fn main() {
         println!("7. Install Nvidia Beta Drivers for explict sync");
         println!("8. Install SteavenSettings Incloudes Settings that fixs nvidia beta drivers as well");
         println!("9. Install SteavenGamerYT Dot Files, backup your old dot files, this will delete your current ones");
+        println!("10. Deblot Linux");
         println!("0. Exit");
 
         let mut answer = String::new();
@@ -630,6 +631,25 @@ fn main() {
                     .status()
                     .expect("Failed to run install.sh from SteavenSettings repository.");
             }
+            "9" => {
+                if distro.contains("Fedora") {
+                    Command::new("sh")
+                        .arg("-c")
+                        .arg("sudo sh -c 'wget -O /steavengameryt/tmp/fedora-deblot.txt https://raw.githubusercontent.com/SteavenToolBox/Arch/main/fedora-deblot.txt'")
+                        .status()
+                        .expect("Failed to download Fedora deblot file.");
+                } else if distro.contains("Debian") {
+                    println!("Debian is not supported for deblotting.");
+                } else if distro.contains("Arch") {
+                    println!("Arch is not supported for deblotting.");
+                } else if distro.contains("Ubuntu") {
+                    Command::new("sh")
+                        .arg("-c")
+                        .arg("sudo sh -c 'wget -O /steavengameryt/tmp/ubuntu-deblot.txt https://raw.githubusercontent.com/SteavenToolBox/Arch/main/ubuntu-deblot.txt'")
+                        .status()
+                        .expect("Failed to download Ubuntu deblot file.");
+                }
+            }
             _ => {
                 println!("Quitting...");
                 run = 0; // set run flag to 0 so program will end
@@ -637,4 +657,5 @@ fn main() {
         }
     }
 }
+
 
