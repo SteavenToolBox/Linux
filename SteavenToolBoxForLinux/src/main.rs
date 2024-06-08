@@ -198,13 +198,15 @@ fn main() {
                             .expect("Failed to install core packages.");
                     }
                     "apt" => {
-                        Command::new(package_manager)
+                        Command::new("sudo")
+                            .arg(package_manager)
                             .args(&["install", "-y", &format!("$(cat {})", package_file)])
                             .status()
                             .expect("Failed to install core packages.");
                     }
                     "dnf" => {
-                        Command::new(package_manager)
+                        Command::new("sudo")
+                            .arg(package_manager)
                             .args(&["install", "-y", &format!("$(cat {})", package_file)])
                             .status()
                             .expect("Failed to install core packages.");
