@@ -3,14 +3,13 @@ use std::process::Command;
 fn main() {
     let mut run = 1; // run flag
     
-    // Create /tmp/steaventoolbox directory if it exists, then remove it and create it again
-    let _ = Command::new("sudo")
-        .arg("sh")
+    // Check if /steaventoolbox and /steaventoolbox/tmp directories can be read and written by the current user
+    let _create_directories = Command::new("sh")
         .arg("-c")
-        .arg("if [ -d \"/tmp/steaventoolbox\" ]; then echo \"Tmp Directory already exists, deleting...\"; rm -r /tmp/steaventoolbox; fi; mkdir /tmp/steaventoolbox && echo \"Created /tmp/steaventoolbox\"")
+        .arg("sudo mkdir -p /steaventoolbox/tmp && sudo chmod 777 -R /steaventoolbox && sudo rm -rf /steaventoolbox/tmp/*")
         .status()
-        .expect("Failed to create /tmp/steaventoolbox directory.");
-
+        .expect("Failed to create directories, set permissions, and empty tmp directory.");
+        
     // Check if wget is installed or not
     let wget_check = Command::new("sh")
         .arg("-c")
@@ -56,6 +55,51 @@ fn main() {
         install_command.status().expect("Failed to install wget.");
     }
 
+    // Check if git is installed or not
+    let git_check = Command::new("sh")
+        .arg("-c")
+        .arg("command -v wget")
+        .output()
+        .expect("Failed to check if wget is installed.");
+
+    if !git_check.stdout.is_empty() {
+        println!("git is already installed.");
+    } else {
+        println!("git could not be found, installing it.");
+        let distro = std::fs::read_to_string("/etc/os-release").expect("Failed to read os-release file.");
+        let package_manager = if distro.contains("Arch") {
+            "pacman"
+        } else if distro.contains("Ubuntu") {
+            "apt"
+        } else if distro.contains("Fedora") {
+            "dnf"
+        } else if distro.contains("Debian") {
+            "apt"
+        } else {
+            panic!("Unsupported distribution.");
+        };
+        let mut install_command = match package_manager {
+            "pacman" => {
+                let mut cmd = Command::new("sudo");
+                cmd.arg("pacman").arg("-Syu").arg("--noconfirm").arg("--needed").arg("git");
+                cmd
+            }
+            "apt" => {
+                let mut cmd = Command::new("sudo");
+                cmd.arg("apt").arg("install").arg("-y").arg("git");
+                cmd
+            }
+            "dnf" => {
+                let mut cmd = Command::new("sudo");
+                cmd.arg("dnf").arg("install").arg("-y").arg("git");
+                cmd
+            }
+            _ => panic!("Unsupported package manager."),
+        };
+
+        install_command.status().expect("Failed to install git.");
+    }
+
     // Check if yay is installed or not
     let distro = std::fs::read_to_string("/etc/os-release").expect("Failed to read os-release file.");
     if distro.contains("Arch") {
@@ -81,12 +125,12 @@ fn main() {
             Command::new("git")
                 .arg("clone")
                 .arg("https://aur.archlinux.org/yay-bin.git")
-                .arg("/tmp/steavengameryt/yay-bin") // Cloning yay to specified directory
+                .arg("/steaventoolbox/tmp/yay-bin") // Cloning yay to specified directory
                 .status()
                 .expect("Failed to clone yay repository.");
             Command::new("sh")
                 .arg("-c")
-                .arg("cd /tmp/steavengameryt/yay-bin && makepkg -si --noconfirm") // Changing directory to cloned yay directory
+                .arg("cd steavento/steaventoolbox/tmp/yay-bin && makepkg -si --noconfirm") // Changing directory to cloned yay directory
                 .status()
                 .expect("Failed to change directory to yay-bin and run makepkg.");
             }
@@ -258,7 +302,7 @@ fn main() {
 
                 Command::new("clear").status().expect("Failed to clear screen.");
                 Command::new("wget")
-                    .args(&["-O", &format!("/tmp/steaventoolbox/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Arch/main/{}", package_file)])
+                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Arch/main/{}", package_file)])
                     .status()
                     .expect("Failed to download core packages file.");
 
@@ -267,7 +311,7 @@ fn main() {
                         Command::new("sudo")
                             .arg("bash")
                             .arg("-c")
-                            .arg(&format!("yay -Syu --noconfirm --needed $(cat /tmp/steaventoolbox/{})", package_file))
+                            .arg(&format!("yay -Syu --noconfirm --needed $(cat /steaventoolbox/tmp/{})", package_file))
                             .status()
                             .expect("Failed to install core packages.");
                     } 
@@ -275,14 +319,14 @@ fn main() {
                         Command::new("sudo")
                             .arg("bash")
                             .arg("-c")
-                            .arg(&format!("apt install -y $(cat /tmp/steaventoolbox/{})", package_file))
+                            .arg(&format!("apt install -y $(cat /steaventoolbox/tmp/{})", package_file))
                             .status()
                             .expect("Failed to install core packages.");
                     }
                     "dnf" => {
-                        Command::new("sudo")
-                            .arg(package_manager)
-                            .args(&["install", "-y", &format!("$(cat /tmp/steaventoolbox/{})", package_file)])
+                        Command::new("bash")
+                            .arg("-c")
+                            .arg(&format!("sudo dnf install -y $(cat /steaventoolbox/tmp/{})", package_file))
                             .status()
                             .expect("Failed to install core packages.");
                     }
@@ -318,7 +362,7 @@ fn main() {
 
                 Command::new("clear").status().expect("Failed to clear screen.");
                 Command::new("wget")
-                    .args(&["-O", &format!("/tmp/steaventoolbox/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Arch/main/{}", package_file)])
+                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Arch/main/{}", package_file)])
                     .status()
                     .expect("Failed to download gnome packages file.");
 
@@ -327,7 +371,7 @@ fn main() {
                         Command::new("sudo")
                             .arg("bash")
                             .arg("-c")
-                            .arg(&format!("yay -Syu --noconfirm --needed $(cat /tmp/steaventoolbox/{})", package_file))
+                            .arg(&format!("yay -Syu --noconfirm --needed $(cat /steaventoolbox/tmp/{})", package_file))
                             .status()
                             .expect("Failed to install gnome packages.");
                     } 
@@ -335,16 +379,16 @@ fn main() {
                         Command::new("sudo")
                             .arg("bash")
                             .arg("-c")
-                            .arg(&format!("apt install -y $(cat /tmp/steaventoolbox/{})", package_file))
+                            .arg(&format!("apt install -y $(cat /steaventoolbox/tmp/{})", package_file))
                             .status()
                             .expect("Failed to install gnome packages.");
                     }
                     "dnf" => {
-                        Command::new("sudo")
-                            .arg(package_manager)
-                            .args(&["install", "-y", &format!("$(cat /tmp/steaventoolbox/{})", package_file)])
+                        Command::new("bash")
+                            .arg("-c")
+                            .arg(&format!("sudo dnf install -y $(cat /steaventoolbox/tmp/{})", package_file))
                             .status()
-                            .expect("Failed to install gnome packages.");
+                            .expect("Failed to install core packages.");
                     }
                     _ => panic!("Unsupported package manager."),
                 };
@@ -378,7 +422,7 @@ fn main() {
 
                 Command::new("clear").status().expect("Failed to clear screen.");
                 Command::new("wget")
-                    .args(&["-O", &format!("/tmp/steaventoolbox/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Arch/main/{}", package_file)])
+                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Arch/main/{}", package_file)])
                     .status()
                     .expect("Failed to download kde packages file.");
 
@@ -387,7 +431,7 @@ fn main() {
                         Command::new("sudo")
                             .arg("bash")
                             .arg("-c")
-                            .arg(&format!("yay -Syu --noconfirm --needed $(cat /tmp/steaventoolbox/{})", package_file))
+                            .arg(&format!("yay -Syu --noconfirm --needed $(cat /steaventoolbox/tmp/{})", package_file))
                             .status()
                             .expect("Failed to install kde packages.");
                     } 
@@ -395,16 +439,16 @@ fn main() {
                         Command::new("sudo")
                             .arg("bash")
                             .arg("-c")
-                            .arg(&format!("apt install -y $(cat /tmp/steaventoolbox/{})", package_file))
+                            .arg(&format!("apt install -y $(cat /steaventoolbox/tmp/{})", package_file))
                             .status()
                             .expect("Failed to install kde packages.");
                     }
                     "dnf" => {
-                        Command::new("sudo")
-                            .arg(package_manager)
-                            .args(&["install", "-y", &format!("$(cat /tmp/steaventoolbox/{})", package_file)])
+                        Command::new("bash")
+                            .arg("-c")
+                            .arg(&format!("sudo dnf install -y $(cat /steaventoolbox/tmp/{})", package_file))
                             .status()
-                            .expect("Failed to install kde packages.");
+                            .expect("Failed to install core packages.");
                     }
                     _ => panic!("Unsupported package manager."),
                 };
@@ -438,7 +482,7 @@ fn main() {
 
                 Command::new("clear").status().expect("Failed to clear screen.");
                 Command::new("wget")
-                    .args(&["-O", &format!("/tmp/steaventoolbox/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Arch/main/{}", package_file)])
+                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Arch/main/{}", package_file)])
                     .status()
                     .expect("Failed to download i3 packages file.");
 
@@ -447,7 +491,7 @@ fn main() {
                         Command::new("sudo")
                             .arg("bash")
                             .arg("-c")
-                            .arg(&format!("yay -Syu --noconfirm --needed $(cat /tmp/steaventoolbox/{})", package_file))
+                            .arg(&format!("yay -Syu --noconfirm --needed $(cat /steaventoolbox/tmp/{})", package_file))
                             .status()
                             .expect("Failed to install i3 packages.");
                     } 
@@ -455,16 +499,16 @@ fn main() {
                         Command::new("sudo")
                             .arg("bash")
                             .arg("-c")
-                            .arg(&format!("apt install -y $(cat /tmp/steaventoolbox/{})", package_file))
+                            .arg(&format!("apt install -y $(cat /steaventoolbox/tmp/{})", package_file))
                             .status()
                             .expect("Failed to install i3 packages.");
                     }
                     "dnf" => {
-                        Command::new("sudo")
-                            .arg(package_manager)
-                            .args(&["install", "-y", &format!("$(cat /tmp/steaventoolbox/{})", package_file)])
+                        Command::new("bash")
+                            .arg("-c")
+                            .arg(&format!("sudo dnf install -y $(cat /steaventoolbox/tmp/{})", package_file))
                             .status()
-                            .expect("Failed to install i3 packages.");
+                            .expect("Failed to install core packages.");
                     }
                     _ => panic!("Unsupported package manager."),
                 };
@@ -577,12 +621,12 @@ fn main() {
             "8" => {
                 Command::new("sh")
                     .arg("-c")
-                    .arg("sudo git clone https://github.com/SteavenGamerYT/SteavenSettings /tmp/steaventoolbox/steavensettings")
+                    .arg("sudo git clone https://github.com/SteavenGamerYT/SteavenSettings /steaventoolbox/tmp/steavensettings")
                     .status()
                     .expect("Failed to clone SteavenSettings repository.");
                 Command::new("sh")
                     .arg("-c")
-                    .arg("cd /tmp/steaventoolbox/steavensettings && ./install.sh")
+                    .arg("cd /steaventoolbox/tmp/steavensettings && ./install.sh")
                     .status()
                     .expect("Failed to run install.sh from SteavenSettings repository.");
             }
