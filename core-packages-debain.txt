@@ -1,0 +1,5 @@
+pipewire
+pipewire-alsa
+pipewire-bin
+pipewire-jack
+pipewire-pulse
