@@ -1,11 +1,5 @@
-# SteavenToolBox For Arch Linux 
-A Free Open Source Toolbox For Arch Linux!
+# SteavenToolBox For Linux
 
+Finaly i stoped doing stuipid sh scripts
 
-Finally the Toolbox is being backported to Arch Linux!
-
-
-# Running SteavenToolBox for Arch Linux
-
-
-`bash <(wget -qO- raw.githubusercontent.com/SteavenToolBox/Arch/main/toolbox.sh)`
+its now rust!
