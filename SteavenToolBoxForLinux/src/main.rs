@@ -238,8 +238,7 @@ fn main() {
         println!("6. Install Hyprland");
         println!("7. Install Nvidia Beta Drivers for explict sync");
         println!("8. Install SteavenSettings Incloudes Settings that fixs nvidia beta drivers as well");
-        println!("9. Install SteavenGamerYT Dot Files, backup your old dot files, this will delete your current ones");
-        println!("10. Deblot Linux");
+        println!("9. Deblot Linux");
         println!("0. Exit");
 
         let mut answer = String::new();
@@ -303,7 +302,7 @@ fn main() {
 
                 Command::new("clear").status().expect("Failed to clear screen.");
                 Command::new("wget")
-                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Arch/main/{}", package_file)])
+                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Linux/main/{}", package_file)])
                     .status()
                     .expect("Failed to download core packages file.");
 
@@ -363,7 +362,7 @@ fn main() {
 
                 Command::new("clear").status().expect("Failed to clear screen.");
                 Command::new("wget")
-                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Arch/main/{}", package_file)])
+                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Linux/main/{}", package_file)])
                     .status()
                     .expect("Failed to download gnome packages file.");
 
@@ -423,7 +422,7 @@ fn main() {
 
                 Command::new("clear").status().expect("Failed to clear screen.");
                 Command::new("wget")
-                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Arch/main/{}", package_file)])
+                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Linux/main/{}", package_file)])
                     .status()
                     .expect("Failed to download kde packages file.");
 
@@ -483,7 +482,7 @@ fn main() {
 
                 Command::new("clear").status().expect("Failed to clear screen.");
                 Command::new("wget")
-                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Arch/main/{}", package_file)])
+                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Linux/main/{}", package_file)])
                     .status()
                     .expect("Failed to download i3 packages file.");
 
@@ -516,7 +515,7 @@ fn main() {
             }
             "6" => {
                 Command::new("wget")
-                    .args(&["-O", "hyprland-packages.txt", "https://raw.githubusercontent.com/SteavenToolBox/Arch/main/hyprland-packages.txt"])
+                    .args(&["-O", "hyprland-packages.txt", "https://raw.githubusercontent.com/SteavenToolBox/Linux/main/hyprland-packages.txt"])
                     .status()
                     .expect("Failed to download hyprland-packages.txt.");
                 Command::new("yay")
@@ -635,9 +634,14 @@ fn main() {
                 if distro.contains("Fedora") {
                     Command::new("sh")
                         .arg("-c")
-                        .arg("sudo sh -c 'wget -O /steavengameryt/tmp/fedora-deblot.txt https://raw.githubusercontent.com/SteavenToolBox/Arch/main/fedora-deblot.txt'")
+                        .arg("sudo sh -c 'wget -O /steavengameryt/tmp/fedora-deblot.txt https://raw.githubusercontent.com/SteavenToolBox/Linux/main/fedora-deblot.txt'")
                         .status()
                         .expect("Failed to download Fedora deblot file.");
+                    Command::new("sh")
+                        .arg("-c")
+                        .arg("sudo dnf remove -y $(cat /steavengameryt/tmp/fedora-deblot.txt)")
+                        .status()
+                        .expect("Failed to remove packages on Fedora using deblot file.");
                 } else if distro.contains("Debian") {
                     println!("Debian is not supported for deblotting.");
                 } else if distro.contains("Arch") {
@@ -645,9 +649,14 @@ fn main() {
                 } else if distro.contains("Ubuntu") {
                     Command::new("sh")
                         .arg("-c")
-                        .arg("sudo sh -c 'wget -O /steavengameryt/tmp/ubuntu-deblot.txt https://raw.githubusercontent.com/SteavenToolBox/Arch/main/ubuntu-deblot.txt'")
+                        .arg("sudo sh -c 'wget -O /steavengameryt/tmp/ubuntu-deblot.txt https://raw.githubusercontent.com/SteavenToolBox/Linux/main/ubuntu-deblot.txt'")
                         .status()
                         .expect("Failed to download Ubuntu deblot file.");
+                    Command::new("sh")
+                        .arg("-c")
+                        .arg("sudo apt purge -y $(cat /steavengameryt/tmp/ubuntu-deblot.txt)")
+                        .status()
+                        .expect("Failed to purge packages on Ubuntu using deblot file.");
                 }
             }
             _ => {
@@ -657,5 +666,6 @@ fn main() {
         }
     }
 }
+
 
 
