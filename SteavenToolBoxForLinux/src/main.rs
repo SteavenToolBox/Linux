@@ -515,11 +515,11 @@ fn main() {
             }
             "6" => {
                 Command::new("wget")
-                    .args(&["-O", "hyprland-packages.txt", "https://raw.githubusercontent.com/SteavenToolBox/Linux/main/hyprland-packages.txt"])
+                    .args(&["-O", "hyprland-packages-arch.txt", "https://raw.githubusercontent.com/SteavenToolBox/Linux/main/hyprland-packages-arch.txt"])
                     .status()
-                    .expect("Failed to download hyprland-packages.txt.");
+                    .expect("Failed to download hyprland-packages-arch.txt.");
                 Command::new("yay")
-                    .args(&["-Syu", "--noconfirm", "--needed", "$(cat hyprland-packages.txt)"])
+                    .args(&["-Syu", "--noconfirm", "--needed", "$(cat hyprland-packages-arch.txt)"])
                     .status()
                     .expect("Failed to install Hyprland packages.");
             }

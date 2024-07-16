@@ -44,3 +44,4 @@ upd72020x-fw
 flatpak
 openssh
 pamixer
+playerctl

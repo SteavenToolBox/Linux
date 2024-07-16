@@ -32,3 +32,5 @@ nemo-fileroller
 pamixer
 xorg-xlsclients
 nwg-look
+grimblast-git
+wl-clipboard-history-git
