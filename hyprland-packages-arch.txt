@@ -13,10 +13,8 @@ rofi-wayland
 kvantum-theme-nordic-git
 nordic-kde-git
 nordic-theme-git
-sddm-nordic-theme-git
 whitesur-cursor-theme-git
 papirus-folders
-sddm
 kvantum
 kvantum-qt5
 qt5ct

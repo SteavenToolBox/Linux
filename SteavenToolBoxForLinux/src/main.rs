@@ -508,21 +508,72 @@ fn main() {
                             .arg("-c")
                             .arg(&format!("sudo dnf install -y $(cat /steaventoolbox/tmp/{})", package_file))
                             .status()
-                            .expect("Failed to install core packages.");
+                            .expect("Failed to install i3 packages.");
                     }
                     _ => panic!("Unsupported package manager."),
                 };
             }
             "6" => {
+                let distro = std::fs::read_to_string("/etc/os-release").expect("Failed to read os-release file.");
+                let package_manager = if distro.contains("Arch") {
+                    "yay"
+                } else if distro.contains("Ubuntu") {
+                    "apt"
+                } else if distro.contains("Fedora") {
+                    "dnf"
+                } else if distro.contains("Debian") {
+                    "apt"
+                } else {
+                    panic!("Unsupported distribution.");
+                };
+
+                let package_file = match package_manager {
+                    "yay" => "hyprland-packages-arch.txt",
+                    "apt" => {
+                        if distro.contains("Debian") {
+                            "hyprland-packages-debian.txt"
+                        } else {
+                            "hyprland-packages-ubuntu.txt"
+                        }
+                    },
+                    "dnf" => "i3-packages-fedora.txt",
+                    _ => panic!("Unsupported package manager."),
+                };
+
+                Command::new("clear").status().expect("Failed to clear screen.");
                 Command::new("wget")
-                    .args(&["-O", "hyprland-packages-arch.txt", "https://raw.githubusercontent.com/SteavenToolBox/Linux/main/hyprland-packages-arch.txt"])
+                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Linux/main/{}", package_file)])
                     .status()
-                    .expect("Failed to download hyprland-packages-arch.txt.");
-                Command::new("yay")
-                    .args(&["-Syu", "--noconfirm", "--needed", "$(cat hyprland-packages-arch.txt)"])
-                    .status()
-                    .expect("Failed to install Hyprland packages.");
+                    .expect("Failed to download i3 packages file.");
+
+                match package_manager {
+                    "yay" => {
+                        Command::new("sudo")
+                            .arg("bash")
+                            .arg("-c")
+                            .arg(&format!("yay -Syu --noconfirm --needed $(cat /steaventoolbox/tmp/{})", package_file))
+                            .status()
+                            .expect("Failed to install hyprland packages.");
+                    } 
+                    "apt" => {
+                        Command::new("sudo")
+                            .arg("bash")
+                            .arg("-c")
+                            .arg(&format!("apt install -y $(cat /steaventoolbox/tmp/{})", package_file))
+                            .status()
+                            .expect("Failed to install hyprland packages.");
+                    }
+                    "dnf" => {
+                        Command::new("bash")
+                            .arg("-c")
+                            .arg(&format!("sudo dnf install -y $(cat /steaventoolbox/tmp/{})", package_file))
+                            .status()
+                            .expect("Failed to install hyprland packages.");
+                    }
+                    _ => panic!("Unsupported package manager."),
+                };
             }
+
             "7" => {
                 let distro = std::fs::read_to_string("/etc/os-release").expect("Failed to read os-release file.");
                 if distro.contains("Arch") {
