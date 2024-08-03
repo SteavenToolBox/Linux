@@ -1,1 +1,1 @@
-/home/omarhanykasban/Documents/GitHub/linux/SteavenToolBoxForLinux/target/release/SteavenToolBoxForLinux: /home/omarhanykasban/Documents/GitHub/linux/SteavenToolBoxForLinux/src/main.rs
+/home/omarhanykasban/Documents/GitHub/Linux/SteavenToolBoxForLinux/target/release/SteavenToolBoxForLinux: /home/omarhanykasban/Documents/GitHub/Linux/SteavenToolBoxForLinux/src/main.rs

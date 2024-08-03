@@ -236,8 +236,8 @@ fn main() {
         println!("4. Install Kde");
         println!("5. Install i3");
         println!("6. Install Hyprland");
-        println!("7. Install Nvidia Beta Drivers for explict sync");
-        println!("8. Install SteavenSettings Incloudes Settings that fixs nvidia beta drivers as well");
+        println!("7. Install Nvidia Beta Drivers for broken proton (HAHAH ITS 560 moment)");
+        println!("8. Install SteavenSettings Incloudes Settings that fixs nvidia drivers as well");
         println!("9. Deblot Linux");
         println!("0. Exit");
 
