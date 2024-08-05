@@ -11,7 +11,7 @@ unzip
 discover
 plasma-nm
 plasma-pa
-aur/kwin-explicit-sync
+kwin
 sddm-kcm
 breeze
 breeze5

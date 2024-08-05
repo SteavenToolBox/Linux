@@ -276,7 +276,7 @@ fn main() {
             "2" => {
                 let distro = std::fs::read_to_string("/etc/os-release").expect("Failed to read os-release file.");
                 let package_manager = if distro.contains("Arch") {
-                    "yay"
+                    "pacamn"
                 } else if distro.contains("Ubuntu") {
                     "apt"
                 } else if distro.contains("Fedora") {
@@ -288,7 +288,7 @@ fn main() {
                 };
 
                 let package_file = match package_manager {
-                    "yay" => "core-packages-arch.txt",
+                    "pacamn" => "core-packages-arch.txt",
                     "apt" => {
                         if distro.contains("Debian") {
                             "core-packages-debian.txt"
@@ -307,11 +307,11 @@ fn main() {
                     .expect("Failed to download core packages file.");
 
                 match package_manager {
-                    "yay" => {
+                    "pacamn" => {
                         Command::new("sudo")
                             .arg("bash")
                             .arg("-c")
-                            .arg(&format!("yay -Syu --noconfirm --needed $(cat /steaventoolbox/tmp/{})", package_file))
+                            .arg(&format!("pacamn -Syu --noconfirm --needed $(cat /steaventoolbox/tmp/{})", package_file))
                             .status()
                             .expect("Failed to install core packages.");
                     } 
@@ -348,7 +348,7 @@ fn main() {
                 };
 
                 let package_file = match package_manager {
-                    "yay" => "gnome-packages-arch.txt",
+                    "pacman" => "gnome-packages-arch.txt",
                     "apt" => {
                         if distro.contains("Debian") {
                             "gnome-packages-debian.txt"
@@ -367,11 +367,11 @@ fn main() {
                     .expect("Failed to download gnome packages file.");
 
                 match package_manager {
-                    "yay" => {
+                    "pacman" => {
                         Command::new("sudo")
                             .arg("bash")
                             .arg("-c")
-                            .arg(&format!("yay -Syu --noconfirm --needed $(cat /steaventoolbox/tmp/{})", package_file))
+                            .arg(&format!("pacman -Syu --noconfirm --needed $(cat /steaventoolbox/tmp/{})", package_file))
                             .status()
                             .expect("Failed to install gnome packages.");
                     } 
@@ -488,8 +488,7 @@ fn main() {
 
                 match package_manager {
                     "yay" => {
-                        Command::new("sudo")
-                            .arg("bash")
+                        Command::new("bash")
                             .arg("-c")
                             .arg(&format!("yay -Syu --noconfirm --needed $(cat /steaventoolbox/tmp/{})", package_file))
                             .status()
@@ -548,8 +547,7 @@ fn main() {
 
                 match package_manager {
                     "yay" => {
-                        Command::new("sudo")
-                            .arg("bash")
+                        Command::new("bash")
                             .arg("-c")
                             .arg(&format!("yay -Syu --noconfirm --needed $(cat /steaventoolbox/tmp/{})", package_file))
                             .status()
