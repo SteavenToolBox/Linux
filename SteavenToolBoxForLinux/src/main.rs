@@ -453,65 +453,33 @@ fn main() {
                     _ => panic!("Unsupported package manager."),
                 };
             }
-            "5" => {
-                let distro = std::fs::read_to_string("/etc/os-release").expect("Failed to read os-release file.");
-                let package_manager = if distro.contains("Arch") {
-                    "yay"
-                } else if distro.contains("Ubuntu") {
-                    "apt"
-                } else if distro.contains("Fedora") {
-                    "dnf"
-                } else if distro.contains("Debian") {
-                    "apt"
-                } else {
-                    panic!("Unsupported distribution.");
-                };
+"5" => {
+    let distro = std::fs::read_to_string("/etc/os-release").expect("Failed to read os-release file.");
+    let script_file = if distro.contains("Arch") {
+        "i3.sh"
+    } else if distro.contains("Ubuntu") || distro.contains("Debian") {
+        "i3-debian.sh"
+    } else if distro.contains("Fedora") {
+        "i3-fedora.sh"
+    } else {
+        panic!("Unsupported distribution.");
+    };
 
-                let package_file = match package_manager {
-                    "yay" => "i3-packages-arch.txt",
-                    "apt" => {
-                        if distro.contains("Debian") {
-                            "i3-packages-debian.txt"
-                        } else {
-                            "i3-packages-ubuntu.txt"
-                        }
-                    },
-                    "dnf" => "i3-packages-fedora.txt",
-                    _ => panic!("Unsupported package manager."),
-                };
+    let url = format!("https://github.com/SteavenToolBox/Linux/raw/refs/heads/main/scripts/{}/{}", if distro.contains("Arch") { "arch" } else if distro.contains("Ubuntu") || distro.contains("Debian") { "debian" } else { "fedora" }, script_file);
 
-                Command::new("clear").status().expect("Failed to clear screen.");
-                Command::new("wget")
-                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Linux/main/{}", package_file)])
-                    .status()
-                    .expect("Failed to download i3 packages file.");
+    Command::new("clear").status().expect("Failed to clear screen.");
+    
+    Command::new("curl")
+        .args(&["-o", &format!("/steaventoolbox/tmp/{}", script_file), &url])
+        .status()
+        .expect("Failed to download i3 script file.");
 
-                match package_manager {
-                    "yay" => {
-                        Command::new("bash")
-                            .arg("-c")
-                            .arg(&format!("yay -Syu --noconfirm --needed $(cat /steaventoolbox/tmp/{})", package_file))
-                            .status()
-                            .expect("Failed to install i3 packages.");
-                    } 
-                    "apt" => {
-                        Command::new("sudo")
-                            .arg("bash")
-                            .arg("-c")
-                            .arg(&format!("apt install -y $(cat /steaventoolbox/tmp/{})", package_file))
-                            .status()
-                            .expect("Failed to install i3 packages.");
-                    }
-                    "dnf" => {
-                        Command::new("bash")
-                            .arg("-c")
-                            .arg(&format!("sudo dnf install -y $(cat /steaventoolbox/tmp/{})", package_file))
-                            .status()
-                            .expect("Failed to install i3 packages.");
-                    }
-                    _ => panic!("Unsupported package manager."),
-                };
-            }
+    // Optionally, you can execute the downloaded script if needed
+    Command::new("bash")
+        .arg(&format!("/steaventoolbox/tmp/{}", script_file))
+        .status()
+        .expect("Failed to execute i3 script.");
+}
             "6" => {
                 let distro = std::fs::read_to_string("/etc/os-release").expect("Failed to read os-release file.");
                 let package_manager = if distro.contains("Arch") {
