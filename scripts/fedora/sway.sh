@@ -1,9 +1,7 @@
 #!/usr/bin/bash
 
-# Xorg
-sudo dnf install -y xorg-x11-server-Xorg \
-    xorg-x11-drv-amdgpu xorg-x11-drv-ati xorg-x11-drv-evdev xorg-x11-drv-fbdev xorg-x11-drv-intel xorg-x11-drv-libinput xorg-x11-drv-nouveau xorg-x11-drv-openchrome xorg-x11-drv-qxl xorg-x11-drv-vesa xorg-x11-drv-vmware xorg-x11-drv-wacom \
-    xorg-x11-xinit xrandr xinput
+# Wayland
+sudo dnf install -y xorg-x11-server-Xwayland qt5-qtwayland qt6-qtwayland wayland-protocols-devel
 
 # Pipewire
 sudo dnf install -y pipewire pipewire-plugin-jack pipewire-alsa pipewire-pulseaudio pipewire-utils \
@@ -12,12 +10,15 @@ sudo dnf install -y pipewire pipewire-plugin-jack pipewire-alsa pipewire-pulseau
     pavucontrol helvum
 
 # Window manager and its tools
-sudo dnf install -y i3 \
+sudo dnf install -y 'dnf-command(copr)'
+sudo dnf copr enable -y tofik/sway 
+sudo dnf copr enable -y pheeef/swaylock-effects 
+sudo dnf install -y sway swayidle swaylock-effects swaync \
     greetd \
-    polkit-gnome xdg-desktop-portal xdg-desktop-portal-gtk \
+    polkit-gnome xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-wlr \
     kwallet kwallet-pam kwalletmanager \
-    numlockx xdotool picom dunst feh flameshot timeshift \
-    polybar rofi mpv
+    grim grimshot wlsunset \
+    waybar rofi-wayland mpv
 
 # Theme and its tools
 sudo dnf install -y lxappearance qt5ct qt6ct kvantum kvantum-qt5 git \

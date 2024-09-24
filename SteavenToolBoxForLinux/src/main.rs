@@ -231,12 +231,12 @@ fn main() {
         println!("SteavenToolbox-For-Linux | We care about your pc! Linux!");
         println!("========================================================");
         println!("1. Update Linux");
-        println!("2. Install Core Linux Packages required for any desktop environment / window manager");
-        println!("3. Install Gnome");
-        println!("4. Install Kde");
-        println!("5. Install i3");
-        println!("6. Install Hyprland");
-        println!("7. Install Nvidia Beta Drivers for broken proton (HAHAH ITS 560 moment)");
+        println!("2. Install i3");
+        println!("3. Install Sway");
+        println!("4. Install Games");
+        println!("5. Install Apps");
+        println!("6. Install Printer Drivers");
+        println!("7. Install Gpu Drivers");
         println!("8. Install SteavenSettings Incloudes Settings that fixs nvidia drivers as well");
         println!("9. Deblot Linux");
         println!("0. Exit");
@@ -275,366 +275,136 @@ fn main() {
             }
             "2" => {
                 let distro = std::fs::read_to_string("/etc/os-release").expect("Failed to read os-release file.");
-                let package_manager = if distro.contains("Arch") {
-                    "pacamn"
-                } else if distro.contains("Ubuntu") {
-                    "apt"
+                let script_file = if distro.contains("Arch") {
+                    "i3.sh"
+                } else if distro.contains("Ubuntu") || distro.contains("Debian") {
+                    "i3.sh"
                 } else if distro.contains("Fedora") {
-                    "dnf"
-                } else if distro.contains("Debian") {
-                    "apt"
+                    "i3.sh"
                 } else {
-                    panic!("Unsupported distribution.");
+                panic!("Unsupported distribution.");
                 };
-
-                let package_file = match package_manager {
-                    "pacamn" => "core-packages-arch.txt",
-                    "apt" => {
-                        if distro.contains("Debian") {
-                            "core-packages-debian.txt"
-                        } else {
-                            "core-packages-ubuntu.txt"
-                        }
-                    },
-                    "dnf" => "core-packages-fedora.txt",
-                    _ => panic!("Unsupported package manager."),
-                };
-
+                let url = format!("https://github.com/SteavenToolBox/Linux/raw/refs/heads/main/scripts/{}/{}", if distro.contains("Arch") { "arch" } else if distro.contains("Ubuntu") || distro.contains("Debian") { "debian" } else { "fedora" }, script_file);
                 Command::new("clear").status().expect("Failed to clear screen.");
                 Command::new("wget")
-                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Linux/main/{}", package_file)])
+                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", script_file), &url])
                     .status()
-                    .expect("Failed to download core packages file.");
-
-                match package_manager {
-                    "pacamn" => {
-                        Command::new("sudo")
-                            .arg("bash")
-                            .arg("-c")
-                            .arg(&format!("pacamn -Syu --noconfirm --needed $(cat /steaventoolbox/tmp/{})", package_file))
-                            .status()
-                            .expect("Failed to install core packages.");
-                    } 
-                    "apt" => {
-                        Command::new("sudo")
-                            .arg("bash")
-                            .arg("-c")
-                            .arg(&format!("apt install -y $(cat /steaventoolbox/tmp/{})", package_file))
-                            .status()
-                            .expect("Failed to install core packages.");
-                    }
-                    "dnf" => {
-                        Command::new("bash")
-                            .arg("-c")
-                            .arg(&format!("sudo dnf install -y $(cat /steaventoolbox/tmp/{})", package_file))
-                            .status()
-                            .expect("Failed to install core packages.");
-                    }
-                    _ => panic!("Unsupported package manager."),
-                };
-            }
+                    .expect("Failed to download i3 script file.");
+                Command::new("bash")
+                    .arg(&format!("/steaventoolbox/tmp/{}", script_file))
+                    .status()
+                    .expect("Failed to execute i3 script.");
+                }
             "3" => {
                 let distro = std::fs::read_to_string("/etc/os-release").expect("Failed to read os-release file.");
-                let package_manager = if distro.contains("Arch") {
-                    "yay"
-                } else if distro.contains("Ubuntu") {
-                    "apt"
+                let script_file = if distro.contains("Arch") {
+                    "sway.sh"
+                } else if distro.contains("Ubuntu") || distro.contains("Debian") {
+                    "sway.sh"
                 } else if distro.contains("Fedora") {
-                    "dnf"
-                } else if distro.contains("Debian") {
-                    "apt"
+                    "sway.sh"
                 } else {
-                    panic!("Unsupported distribution.");
+                panic!("Unsupported distribution.");
                 };
-
-                let package_file = match package_manager {
-                    "pacman" => "gnome-packages-arch.txt",
-                    "apt" => {
-                        if distro.contains("Debian") {
-                            "gnome-packages-debian.txt"
-                        } else {
-                            "gnome-packages-ubuntu.txt"
-                        }
-                    },
-                    "dnf" => "gnome-packages-fedora.txt",
-                    _ => panic!("Unsupported package manager."),
-                };
-
+                let url = format!("https://github.com/SteavenToolBox/Linux/raw/refs/heads/main/scripts/{}/{}", if distro.contains("Arch") { "arch" } else if distro.contains("Ubuntu") || distro.contains("Debian") { "debian" } else { "fedora" }, script_file);
                 Command::new("clear").status().expect("Failed to clear screen.");
                 Command::new("wget")
-                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Linux/main/{}", package_file)])
+                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", script_file), &url])
                     .status()
-                    .expect("Failed to download gnome packages file.");
-
-                match package_manager {
-                    "pacman" => {
-                        Command::new("sudo")
-                            .arg("bash")
-                            .arg("-c")
-                            .arg(&format!("pacman -Syu --noconfirm --needed $(cat /steaventoolbox/tmp/{})", package_file))
-                            .status()
-                            .expect("Failed to install gnome packages.");
-                    } 
-                    "apt" => {
-                        Command::new("sudo")
-                            .arg("bash")
-                            .arg("-c")
-                            .arg(&format!("apt install -y $(cat /steaventoolbox/tmp/{})", package_file))
-                            .status()
-                            .expect("Failed to install gnome packages.");
+                    .expect("Failed to download i3 script file.");
+                Command::new("bash")
+                    .arg(&format!("/steaventoolbox/tmp/{}", script_file))
+                    .status()
+                    .expect("Failed to execute i3 script.");
+                }
+                "4" => {
+                    let distro = std::fs::read_to_string("/etc/os-release").expect("Failed to read os-release file.");
+                    let script_file = if distro.contains("Arch") {
+                        "games.sh"
+                    } else if distro.contains("Ubuntu") || distro.contains("Debian") {
+                        "games.sh"
+                    } else if distro.contains("Fedora") {
+                        "games.sh"
+                    } else {
+                    panic!("Unsupported distribution.");
+                    };
+                    let url = format!("https://github.com/SteavenToolBox/Linux/raw/refs/heads/main/scripts/{}/{}", if distro.contains("Arch") { "arch" } else if distro.contains("Ubuntu") || distro.contains("Debian") { "debian" } else { "fedora" }, script_file);
+                    Command::new("clear").status().expect("Failed to clear screen.");
+                    Command::new("wget")
+                        .args(&["-O", &format!("/steaventoolbox/tmp/{}", script_file), &url])
+                        .status()
+                        .expect("Failed to download i3 script file.");
+                    Command::new("bash")
+                        .arg(&format!("/steaventoolbox/tmp/{}", script_file))
+                        .status()
+                        .expect("Failed to execute i3 script.");
                     }
-                    "dnf" => {
-                        Command::new("bash")
-                            .arg("-c")
-                            .arg(&format!("sudo dnf install -y $(cat /steaventoolbox/tmp/{})", package_file))
-                            .status()
-                            .expect("Failed to install core packages.");
-                    }
-                    _ => panic!("Unsupported package manager."),
-                };
-            }
-            "4" => {
+            "5" => {
                 let distro = std::fs::read_to_string("/etc/os-release").expect("Failed to read os-release file.");
-                let package_manager = if distro.contains("Arch") {
-                    "yay"
-                } else if distro.contains("Ubuntu") {
-                    "apt"
+                let script_file = if distro.contains("Arch") {
+                    "apps.sh"
+                } else if distro.contains("Ubuntu") || distro.contains("Debian") {
+                    "apps.sh"
                 } else if distro.contains("Fedora") {
-                    "dnf"
-                } else if distro.contains("Debian") {
-                    "apt"
+                    "apps.sh"
                 } else {
-                    panic!("Unsupported distribution.");
+                panic!("Unsupported distribution.");
                 };
-
-                let package_file = match package_manager {
-                    "yay" => "kde-packages-arch.txt",
-                    "apt" => {
-                        if distro.contains("Debian") {
-                            "kde-packages-debian.txt"
-                        } else {
-                            "kde-packages-ubuntu.txt"
-                        }
-                    },
-                    "dnf" => "kde-packages-fedora.txt",
-                    _ => panic!("Unsupported package manager."),
-                };
-
+                let url = format!("https://github.com/SteavenToolBox/Linux/raw/refs/heads/main/scripts/{}/{}", if distro.contains("Arch") { "arch" } else if distro.contains("Ubuntu") || distro.contains("Debian") { "debian" } else { "fedora" }, script_file);
                 Command::new("clear").status().expect("Failed to clear screen.");
                 Command::new("wget")
-                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Linux/main/{}", package_file)])
+                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", script_file), &url])
                     .status()
-                    .expect("Failed to download kde packages file.");
-
-                match package_manager {
-                    "yay" => {
-                        Command::new("sudo")
-                            .arg("bash")
-                            .arg("-c")
-                            .arg(&format!("yay -Syu --noconfirm --needed $(cat /steaventoolbox/tmp/{})", package_file))
-                            .status()
-                            .expect("Failed to install kde packages.");
-                    } 
-                    "apt" => {
-                        Command::new("sudo")
-                            .arg("bash")
-                            .arg("-c")
-                            .arg(&format!("apt install -y $(cat /steaventoolbox/tmp/{})", package_file))
-                            .status()
-                            .expect("Failed to install kde packages.");
-                    }
-                    "dnf" => {
-                        Command::new("bash")
-                            .arg("-c")
-                            .arg(&format!("sudo dnf install -y $(cat /steaventoolbox/tmp/{})", package_file))
-                            .status()
-                            .expect("Failed to install core packages.");
-                    }
-                    _ => panic!("Unsupported package manager."),
-                };
-            }
-"5" => {
-    let distro = std::fs::read_to_string("/etc/os-release").expect("Failed to read os-release file.");
-    let script_file = if distro.contains("Arch") {
-        "i3.sh"
-    } else if distro.contains("Ubuntu") || distro.contains("Debian") {
-        "i3-debian.sh"
-    } else if distro.contains("Fedora") {
-        "i3-fedora.sh"
-    } else {
-        panic!("Unsupported distribution.");
-    };
-
-    let url = format!("https://github.com/SteavenToolBox/Linux/raw/refs/heads/main/scripts/{}/{}", if distro.contains("Arch") { "arch" } else if distro.contains("Ubuntu") || distro.contains("Debian") { "debian" } else { "fedora" }, script_file);
-
-    Command::new("clear").status().expect("Failed to clear screen.");
-    
-    Command::new("curl")
-        .args(&["-o", &format!("/steaventoolbox/tmp/{}", script_file), &url])
-        .status()
-        .expect("Failed to download i3 script file.");
-
-    // Optionally, you can execute the downloaded script if needed
-    Command::new("bash")
-        .arg(&format!("/steaventoolbox/tmp/{}", script_file))
-        .status()
-        .expect("Failed to execute i3 script.");
-}
+                    .expect("Failed to download i3 script file.");
+                Command::new("bash")
+                    .arg(&format!("/steaventoolbox/tmp/{}", script_file))
+                    .status()
+                    .expect("Failed to execute i3 script.");
+                }
             "6" => {
                 let distro = std::fs::read_to_string("/etc/os-release").expect("Failed to read os-release file.");
-                let package_manager = if distro.contains("Arch") {
-                    "yay"
-                } else if distro.contains("Ubuntu") {
-                    "apt"
+                let script_file = if distro.contains("Arch") {
+                    "printer.sh"
+                } else if distro.contains("Ubuntu") || distro.contains("Debian") {
+                    "printer.sh"
                 } else if distro.contains("Fedora") {
-                    "dnf"
-                } else if distro.contains("Debian") {
-                    "apt"
+                    "printer.sh"
                 } else {
-                    panic!("Unsupported distribution.");
+                panic!("Unsupported distribution.");
                 };
-
-                let package_file = match package_manager {
-                    "yay" => "hyprland-packages-arch.txt",
-                    "apt" => {
-                        if distro.contains("Debian") {
-                            "hyprland-packages-debian.txt"
-                        } else {
-                            "hyprland-packages-ubuntu.txt"
-                        }
-                    },
-                    "dnf" => "i3-packages-fedora.txt",
-                    _ => panic!("Unsupported package manager."),
-                };
-
+                let url = format!("https://github.com/SteavenToolBox/Linux/raw/refs/heads/main/scripts/{}/{}", if distro.contains("Arch") { "arch" } else if distro.contains("Ubuntu") || distro.contains("Debian") { "debian" } else { "fedora" }, script_file);
                 Command::new("clear").status().expect("Failed to clear screen.");
                 Command::new("wget")
-                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", package_file), &format!("https://raw.githubusercontent.com/SteavenToolBox/Linux/main/{}", package_file)])
+                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", script_file), &url])
                     .status()
-                    .expect("Failed to download i3 packages file.");
-
-                match package_manager {
-                    "yay" => {
-                        Command::new("bash")
-                            .arg("-c")
-                            .arg(&format!("yay -Syu --noconfirm --needed $(cat /steaventoolbox/tmp/{})", package_file))
-                            .status()
-                            .expect("Failed to install hyprland packages.");
-                    } 
-                    "apt" => {
-                        Command::new("sudo")
-                            .arg("bash")
-                            .arg("-c")
-                            .arg(&format!("apt install -y $(cat /steaventoolbox/tmp/{})", package_file))
-                            .status()
-                            .expect("Failed to install hyprland packages.");
-                    }
-                    "dnf" => {
-                        Command::new("bash")
-                            .arg("-c")
-                            .arg(&format!("sudo dnf install -y $(cat /steaventoolbox/tmp/{})", package_file))
-                            .status()
-                            .expect("Failed to install hyprland packages.");
-                    }
-                    _ => panic!("Unsupported package manager."),
-                };
-            }
-
+                    .expect("Failed to download i3 script file.");
+                Command::new("bash")
+                    .arg(&format!("/steaventoolbox/tmp/{}", script_file))
+                    .status()
+                    .expect("Failed to execute i3 script.");
+                }
             "7" => {
                 let distro = std::fs::read_to_string("/etc/os-release").expect("Failed to read os-release file.");
-                if distro.contains("Arch") {
-                    Command::new("sh")
-                        .arg("-c")
-                        .arg("yay -Syu --noconfirm --needed aur/lib32-nvidia-utils-beta aur/lib32-opencl-nvidia-beta aur/nvidia-beta-dkms aur/nvidia-settings-beta aur/nvidia-utils-beta aur/opencl-nvidia-beta")
-                        .status()
-                        .expect("Failed to install Nvidia Beta Drivers.");
-                    Command::new("sh")
-                        .arg("-c")
-                        .arg("sudo")
-                        .arg("systemctl enable nvidia-suspend.service")
-                        .status()
-                        .expect("Failed to enable nvidia-suspend service.");
-                    Command::new("sh")
-                        .arg("-c")
-                        .arg("sudo")
-                        .arg("systemctl enable nvidia-resume.service")
-                        .status()
-                        .expect("Failed to enable nvidia-resume service.");
-                    Command::new("sh")
-                        .arg("-c")
-                        .arg("sudo")
-                        .arg("systemctl enable nvidia-hibernate.service")
-                        .status()
-                        .expect("Failed to enable nvidia-hibernate service.");
-                } else if distro.contains("Ubuntu") {
-                    Command::new("sh")
-                        .arg("-c")
-                        .arg("sudo")
-                        .arg("add-apt-repository -y ppa:graphics-drivers/ppa")
-                        .status()
-                        .expect("Failed to add Nvidia drivers repository on Ubuntu.");
-                    Command::new("sh")
-                        .arg("-c")
-                        .arg("sudo")
-                        .arg("apt update")
-                        .status()
-                        .expect("Failed to update apt on Ubuntu.");
-                    Command::new("sh")
-                        .arg("-c")
-                        .arg("sudo")
-                        .arg("apt install nvidia-driver-555 -y")
-                        .status()
-                        .expect("Failed to install Nvidia driver on Ubuntu.");
-                    Command::new("sh")
-                        .arg("-c")
-                        .arg("sudo")
-                        .arg("systemctl enable nvidia-suspend.service")
-                        .status()
-                        .expect("Failed to enable nvidia-suspend service.");
-                    Command::new("sh")
-                        .arg("-c")
-                        .arg("sudo")
-                        .arg("systemctl enable nvidia-resume.service")
-                        .status()
-                        .expect("Failed to enable nvidia-resume service.");
-                    Command::new("sh")
-                        .arg("-c")
-                        .arg("sudo")
-                        .arg("systemctl enable nvidia-hibernate.service")
-                        .status()
-                        .expect("Failed to enable nvidia-hibernate service.");
+                let script_file = if distro.contains("Arch") {
+                    "drivers.sh"
+                } else if distro.contains("Ubuntu") || distro.contains("Debian") {
+                    "drivers.sh"
                 } else if distro.contains("Fedora") {
-                    Command::new("sh")
-                        .arg("-c")
-                        .arg("sudo dnf install \"kernel-devel-uname-r >= $(uname -r)\" -y")
-                        .status()
-                        .expect("Failed to install kernel-devel.");
-                    Command::new("sh")
-                        .arg("-c")
-                        .arg("sudo dnf update -y")
-                        .status()
-                        .expect("Failed to update with dnf.");
-                    Command::new("sh")
-                        .arg("-c")
-                        .arg("sudo dnf copr enable kwizart/nvidia-driver-rawhide -y")
-                        .status()
-                        .expect("Failed to enable nvidia-driver-rawhide copr.");
-                    Command::new("sh")
-                        .arg("-c")
-                        .arg("sudo dnf install rpmfusion-nonfree-release-rawhide -y")
-                        .status()
-                        .expect("Failed to install rpmfusion-nonfree-release-rawhide.");
-                    Command::new("sh")
-                        .arg("-c")
-                        .arg("sudo dnf --enablerepo=rpmfusion-nonfree-rawhide install akmod-nvidia xorg-x11-drv-nvidia xorg-x11-drv-nvidia-cuda --nogpgcheck -y")
-                        .status()
-                        .expect("Failed to install Nvidia drivers from rpmfusion-nonfree-rawhide.");
-                } else if distro.contains("Debian") {
-                    println!("You are using Debian, sorry your distro is not supported, your distro is too old");
+                    "drivers.sh"
                 } else {
-                    panic!("Unsupported distribution.");
+                panic!("Unsupported distribution.");
+                };
+                let url = format!("https://github.com/SteavenToolBox/Linux/raw/refs/heads/main/scripts/{}/{}", if distro.contains("Arch") { "arch" } else if distro.contains("Ubuntu") || distro.contains("Debian") { "debian" } else { "fedora" }, script_file);
+                Command::new("clear").status().expect("Failed to clear screen.");
+                Command::new("wget")
+                    .args(&["-O", &format!("/steaventoolbox/tmp/{}", script_file), &url])
+                    .status()
+                    .expect("Failed to download i3 script file.");
+                Command::new("bash")
+                    .arg(&format!("/steaventoolbox/tmp/{}", script_file))
+                    .status()
+                    .expect("Failed to execute i3 script.");
                 }
-            }
             "8" => {
                 Command::new("sh")
                     .arg("-c")

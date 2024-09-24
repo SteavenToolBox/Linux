@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 # Xorg
-sudo pacman -S --noconfirm --needed xorg xorg-server xorg-apps xorg-xinit
+sudo pacman -S --noconfirm --needed xorg xorg-server xorg-apps xorg-xinit xorg-xwayland --ignore=xorg-xwayland-git
 
 # Pipewire
 sudo pacman -S --noconfirm --needed pipewire pipewire-jack pipewire-alsa pipewire-pulse \
