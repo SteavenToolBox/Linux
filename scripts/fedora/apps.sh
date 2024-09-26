@@ -7,6 +7,8 @@ sudo dnf install -y starship zoxide fastfetch trash-cli bat speedtest-cli neovim
 # missing, topgrade
 
 # Apps that i use
+sudo dnf copr enable -y sergiomb/electrons 
+sudo dnf copr enable -y andykimpe/notepadqq
 sudo dnf install -y discord \
     libreoffice xreader \
     obs-studio obs-studio-plugin-vkcapture \
@@ -15,8 +17,9 @@ sudo dnf install -y discord \
     firefox vlc audacious
     nemo-mediainfo-tab \
     ente-auth-bin \
-    obs-pipewire-audio-capture-bin
-# missing bitwarden whatsie element-desktop visual-studio-code github-desktop notepadqq phonon-qt6-mpv gstreamer-vaapi obs-gstreamer freedownloadmanager
+    obs-pipewire-audio-capture-bin \
+    element-desktop notepadqq
+# missing bitwarden whatsie visual-studio-code github-desktop phonon-qt6-mpv gstreamer-vaapi obs-gstreamer freedownloadmanager
 
 # Disks app
 sudo dnf install -y gnome-disk-utility gparted \

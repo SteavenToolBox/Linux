@@ -27,9 +27,13 @@ git clone https://github.com/vinceliuice/WhiteSur-cursors.git /tmp/WhiteSur-curs
 sudo cp -r /tmp/WhiteSur-cursors/dist /usr/share/icons/WhiteSur-cursors
 
 # Fonts
+sudo dnf install -y 'dnf-command(copr)'
+sudo dnf copr enable -y aquacash5/nerd-fonts 
 sudo dnf install -y google-roboto-fonts google-roboto-mono-fonts \
-    google-roboto-slab-fonts google-noto-color-emoji-fonts google-noto-naskh-arabic-ui-fonts google-noto-sans-arabic-fonts google-noto-sans-cjk-fonts google-noto-sans-mono-fonts
-# missing,  ttf-roboto ttf-roboto-mono ttf-roboto-mono-nerd ttf-ubuntu-font-family ttf-ubuntu-mono-nerd ttf-ubuntu-nerd ttf-fira-code otf-firamono-nerd ttf-firacode-nerd ttf-croscore
+    google-roboto-slab-fonts google-noto-color-emoji-fonts google-noto-naskh-arabic-ui-fonts google-noto-sans-arabic-fonts google-noto-sans-cjk-fonts google-noto-sans-mono-fonts \
+    mozilla-fira-fonts-common mozilla-fira-mono-fonts mozilla-fira-sans-fonts google-arimo-fonts google-cousine-fonts google-tinos-fonts \
+    roboto-mono-nerd-fonts ubuntu-mono-nerd-fonts ubuntu-nerd-fonts ubuntu-sans-nerd-fonts fira-code-nerd-fonts fira-mono-nerd-fonts 
+# missing, ttf-ubuntu-font-family
 
 # Spell checkers
 sudo dnf install -y hunspell nuspell \
