@@ -40,7 +40,6 @@ sudo dnf install -y hunspell nuspell \
     hunspell-en-US hunspell-ar
 
 # Apps that i use
-sudo dnf install -y 'dnf-command(copr)'
 sudo dnf copr enable -y yselkowitz/xapps
 sudo dnf install -y nemo nemo-fileroller \
     kcalc \
