@@ -5,7 +5,8 @@ sudo pacman -S --noconfirm --needed cups cups-browsed \
     gutenprint foomatic-db-gutenprint-ppds \
     hplip \
     epson-inkjet-printer-escpr epson-inkjet-printer-escpr2 \
-    system-config-printer
+    system-config-printer \
+    ipp-usb sane-airscan python-pyqt5
 
 # Enable and start Cups
 sudo systemctl enable --now cups
